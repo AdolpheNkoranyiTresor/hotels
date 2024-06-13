@@ -1,0 +1,9 @@
+{
+    "name": "drupal/path_alias_length",
+    "description": "Allows longer length for path aliases, up to 1024 characters.",
+    "type": "drupal-module",
+    "require": {
+        "php": ">=7.4"
+    },
+    "minimum-stability": "dev"
+}

@@ -1,0 +1,13 @@
+name: Path alias length
+type: module
+description: 'Allows longer length for path aliases, up to 1024 characters'
+core_version_requirement: ^9 || ^10
+
+dependencies:
+  - drupal:path_alias
+  - pathauto:pathauto
+
+# Information added by Drupal.org packaging script on 2023-12-04
+version: '1.0.0-beta3'
+project: 'path_alias_length'
+datestamp: 1701719913

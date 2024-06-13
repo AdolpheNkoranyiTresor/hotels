@@ -1,0 +1,8 @@
+services:
+  path_alias_length.alias_storage_helper:
+    class: Drupal\path_alias_length\AliasStorageHelperDecorator
+    decorates: pathauto.alias_storage_helper
+    decoration_priority: 10
+    public: false
+    arguments:
+      - '@path_alias_length.alias_storage_helper.inner'

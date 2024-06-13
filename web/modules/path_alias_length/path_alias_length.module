@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Extends the length for the path_alias storage.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ *
+ * @see PathAlias::baseFieldDefinitions()
+ */
+function path_alias_length_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type) {
+  if ($entity_type->id() !== 'path_alias') {
+    return;
+  }
+  // Increase the length of the alias field.
+  // @see PathAlias::baseFieldDefinitions()
+  /** @var \Drupal\Core\Field\TypedData\FieldItemDataDefinition $item_definition */
+  $item_definition = $fields['alias']->getItemDefinition();
+  $item_definition->setSetting('max_length', 1024);
+  $fields['alias']->setItemDefinition($item_definition);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function path_alias_length_form_pathauto_settings_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  foreach (['max_length', 'max_component_length'] as $form_key) {
+    $form[$form_key]['#size'] = 4;
+    $form[$form_key]['#maxlength'] = 4;
+  }
+}

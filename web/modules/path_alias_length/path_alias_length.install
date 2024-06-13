@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * Install/uninstall the module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function path_alias_length_install() {
+  _path_alias_length_update_length(1024);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function path_alias_length_uninstall() {
+  _path_alias_length_update_length(255);
+}
+
+/**
+ * Update field alias schema max length setting.
+ *
+ * @param int $field_length
+ *   The length  of the alias field.
+ */
+function _path_alias_length_update_length(int $field_length): void {
+  $entity_type_id = 'path_alias';
+  $field_name = 'alias';
+
+  $key_value = \Drupal::keyValue('entity.storage_schema.sql');
+  $key_name = $entity_type_id . '.field_schema_data.' . $field_name;
+  $storage_schema = $key_value->get($key_name);
+
+  /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $schema_repository */
+  $schema_repository = \Drupal::service('entity.last_installed_schema.repository');
+  $schema = \Drupal::database()->schema();
+  $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
+  $table_names = $storage->getTableMapping()->getAllFieldTableNames($field_name);
+
+  // Change the field length in the database.
+  foreach ($table_names as $table_name) {
+    $spec = &$storage_schema[$table_name]['fields'][$field_name];
+    $spec['length'] = $field_length;
+    $schema->changeField($table_name, $field_name, $field_name, $spec);
+  }
+
+  // Update storage schema.
+  $key_value->set($key_name, $storage_schema);
+
+  // Update the field definition in the last installed schema repository.
+  $field_storage_definitions = $schema_repository->getLastInstalledFieldStorageDefinitions($entity_type_id);
+  $field_storage_definitions[$field_name]->setSetting('max_length', $field_length);
+
+  // Update the serialized schema property.
+  $rc = new \ReflectionClass($field_storage_definitions[$field_name]);
+  $schema_property = $rc->getProperty('schema');
+  $schema_property->setAccessible(TRUE);
+  $schema = $schema_property->getValue($field_storage_definitions[$field_name]);
+  $schema['columns']['value']['length'] = $field_length;
+  $schema_property->setValue($field_storage_definitions[$field_name], $schema);
+  $schema_repository->setLastInstalledFieldStorageDefinitions($entity_type_id, $field_storage_definitions);
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->updateFieldStorageDefinition($field_storage_definitions[$field_name]);
+}
