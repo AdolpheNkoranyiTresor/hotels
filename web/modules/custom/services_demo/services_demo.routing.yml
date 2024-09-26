@@ -1,0 +1,62 @@
+# User account services
+services_demo.current_user:
+  path: '/current_user'
+  defaults:
+    _controller: '\Drupal\services_demo\Controller\UserController::currentUserDemo'
+    _title: 'Current User'
+  requirements: 
+    _permission: 'access content'
+
+services_demo.user_email:
+  path: '/current_user_email'
+  defaults:
+    _controller: '\Drupal\services_demo\Controller\UserController::currentUserEmail'
+    _title: 'Current User Email'
+  requirements: 
+    _permission: 'access content'
+
+# Messenger Services
+services_demo.alert_message:
+  path: '/alerts'
+  defaults:
+    _controller: '\Drupal\services_demo\Controller\AlertsController::alertMessages'
+    _title: 'Alert messages'
+  requirements: 
+    _permission: 'access content'
+
+services_demo.alert_type:
+  path: '/alert/{alert_type}'
+  defaults:
+    _controller: '\Drupal\services_demo\Controller\AlertsController::alertType'
+    _title: 'Alert Message'
+  requirements: 
+    _permission: 'access content'
+    type : 'status|warning|error'
+
+# Logger Services
+services_demo.log_messages:
+  path: '/logging'
+  defaults:
+    _controller: '\Drupal\services_demo\Controller\LogsController::logsMessages'
+    _title: 'Logging messages'
+  requirements: 
+    _permission: 'access content'
+
+# Translation Service
+services_demo.translation:
+  path: '/translation'
+  defaults:
+    _controller: '\Drupal\services_demo\Controller\TranslationController::translationDemo'
+    _title: 'Translation'
+  requirements: 
+    _permission: 'access content'  
+
+ 
+# Translation placeholders Service
+services_demo.placeholders:
+  path: '/placeholders'
+  defaults:
+    _controller: '\Drupal\services_demo\Controller\TranslationController::translationPlaceholders'
+    _title: 'Translation placeholders' 
+  requirements: 
+    _permission: 'access content'

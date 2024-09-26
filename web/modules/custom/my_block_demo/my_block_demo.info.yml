@@ -1,0 +1,5 @@
+name: "My Block Demo"
+description: "A Block Demo Module"
+type: "module"
+package: "Testing"
+core_version_requirement: ^9 || ^10
