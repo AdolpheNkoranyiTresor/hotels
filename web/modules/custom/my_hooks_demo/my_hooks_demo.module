@@ -2,16 +2,35 @@
 // File: my_hooks_demo/my_hooks_demo.module
 
 use Drupal\User\UserInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_user_login().
  */
-Function my_hooks_demo_user_login(UserInterface $account) {
+function my_hooks_demo_user_login(UserInterface $account) {
     $user = $account->getDisplayName();
   \Drupal::messenger()->addMessage(t("Welcome @username. Welcome back!!!", ['@username' => $user]));
 }   
 
-Function my_hooks_demo_cache_flush() {
+function my_hooks_demo_cache_flush() {
     // $user = $account->getDisplayName();
   \Drupal::messenger()->addMessage('You flushed the cache!');
 }   
+
+function my_hooks_demo_form_alter($form, $form_state, $form_id){
+  $form['#title'] = 'Altered Form';
+
+  if ($form_id == 'christmas_dinner_subscription'){
+    $message = t('Altered form with id: @form_id', ['@form_id' => $form_id]);
+
+    Drupal::messenger()->addMessage($message);
+  }
+}
+
+//Implementing hook_form_FORM_ID_alter() on the form used to create Articles content type
+function my_hooks_demo_form_node_article_form_alter(){
+  $message = t('Altered the Article form');
+
+  Drupal::messenger()->addMessage($message);
+
+}
