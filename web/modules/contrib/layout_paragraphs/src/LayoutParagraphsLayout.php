@@ -61,6 +61,13 @@ class LayoutParagraphsLayout implements ThirdPartySettingsInterface {
   protected $id;
 
   /**
+   * The layout's parent entity.
+   *
+   * @var \Drupal\Core\Entity\EntityInterface
+   */
+  protected $entity;
+
+  /**
    * Class constructor.
    *
    * @param \Drupal\Core\Field\EntityReferenceFieldItemListInterface $paragraphs_reference_field
